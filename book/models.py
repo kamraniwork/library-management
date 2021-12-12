@@ -2,13 +2,15 @@ from django.db import models
 from django.utils import timezone
 from extension.utils import jalaly_converter
 from datetime import timedelta
-from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.utils.html import format_html
 
 User = get_user_model()
 
 
 class Category(models.Model):
+    parent = models.ForeignKey('self', default=None, null=True, blank=True, on_delete=models.SET_NULL,
+                               related_name="children", verbose_name="زیردسته")
     title = models.CharField(max_length=200, verbose_name="عنوان دسته بندی")
     slug = models.SlugField(max_length=100, verbose_name="موضوع")
     status = models.BooleanField(default=True, verbose_name="آیا نمایش داده شود؟")
@@ -46,6 +48,12 @@ class Book(models.Model):
     def category_to_string(self):
         return ", ".join([cat.title for cat in self.category.all()])
 
+    def jpublish(self):
+        return jalaly_converter(self.created)
+
+    def thumbnail_tag(self):
+        return format_html("<img width=100 src='{}'>".format(self.thumbnail.url))
+
 
 class Issue(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='issue_book')
@@ -58,7 +66,7 @@ class Issue(models.Model):
         ordering = ['-created']
 
     def __str__(self):
-        return self.user.first_name + ' : ' + self.book.name
+        return self.book.name
 
     def is_on_time(self):
         last_two_week = timezone.now() - timedelta(days=14)
@@ -71,3 +79,7 @@ class Issue(models.Model):
 
     def jpublish(self):
         return jalaly_converter(self.created)
+
+    def thumbnail_book(self):
+        return self.book.thumbnail_tag()
+
