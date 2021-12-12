@@ -43,7 +43,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-
+    'book.apps.BookConfig',
 ]
 
 INSTALLED_APPS = DEFAULT_APP + THIRD_PARTY_APPS + LOCAL_APPS
