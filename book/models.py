@@ -56,13 +56,21 @@ class Issue(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='issue_user')
     created = models.DateTimeField(auto_now_add=True, verbose_name='زمان انتشار')
     renewCount = models.IntegerField(verbose_name="تعداد تمدید")
-    status = models.BooleanField(default=True,verbose_name='آیا هنوز در امانت است یا خیر؟ ')
+    status = models.BooleanField(default=True, verbose_name='آیا هنوز در امانت است یا خیر؟ ')
 
     class Meta:
         ordering = ['-created']
 
     def __str__(self):
         return self.book.name
+
+    def save(self, *args, **kwargs):
+        if not self.status:
+            self.book.status = 'p'
+        else:
+            self.book.status = 'd'
+
+        super(Issue, self).save(*args, **kwargs)
 
     def is_on_time(self):
         last_two_week = timezone.now() - timedelta(days=14)

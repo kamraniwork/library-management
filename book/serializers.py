@@ -30,7 +30,7 @@ class BookDetailSerializers(ModelSerializer):
             # 'issue',
             'description',
             'author',
-            'created',
+            'jpublish',
             'status',
         ]
 
@@ -59,7 +59,6 @@ class BookInputSerializers(ModelSerializer):
             'category',
             'description',
             'author',
-            'created',
         ]
 
 
@@ -86,6 +85,7 @@ class IssueListSerializers(ModelSerializer):
             'book',
             'user',
             'renewCount',
+            'is_on_time',
         ]
 
 
@@ -97,14 +97,14 @@ class IssueDetailSerializers(ModelSerializer):
         fields = [
             'book',
             'user',
-            'created',
+            'jpublish',
             'renewCount',
             'status',
+            'is_on_time',
         ]
 
 
 class IssueInputSerializers(ModelSerializer):
-
     class Meta:
         model = Issue
         fields = [
