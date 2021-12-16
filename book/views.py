@@ -116,3 +116,9 @@ class IssueView(ViewSet):
         issue_book.book.save()
         issue_book.save()
         return Response({'status': 'book return to library'})
+
+    @action(detail=False, methods=['get'], name='list is_on_time==False user ')
+    def user_issue_return(self, request):
+        issue_delay_user = Issue.objects.filter(delay=False, status=True)
+        serializer = IssueListSerializers(instance=issue_delay_user, context={'request': request}, many=True)
+        return Response(serializer.data)

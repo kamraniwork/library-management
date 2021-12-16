@@ -56,6 +56,7 @@ class Issue(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='issue_user')
     created = models.DateTimeField(auto_now_add=True, verbose_name='زمان انتشار')
     renewCount = models.IntegerField(verbose_name="تعداد تمدید")
+    delay = models.BooleanField(default=False, verbose_name='تاخیر')
     status = models.BooleanField(default=True, verbose_name='آیا هنوز در امانت است یا خیر؟ ')
 
     class Meta:
@@ -75,8 +76,12 @@ class Issue(models.Model):
     def is_on_time(self):
         last_two_week = timezone.now() - timedelta(days=14)
         if self.created > last_two_week:
+            self.delay = True
+            self.save()
             return True
         else:
+            self.delay = False
+            self.save()
             return False
 
     is_on_time.boolean = True
