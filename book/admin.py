@@ -39,7 +39,7 @@ admin.site.register(Category, CategoryAdmin)
 
 class BookAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'thumbnail_tag', 'slug', 'description', 'author', 'status', 'jpublish', 'category_to_string')
+        'name', 'slug', 'description', 'author', 'status', 'jpublish', 'category_to_string')
     list_filter = ('status', 'created')
     search_fields = ('name', 'description')
 
@@ -51,7 +51,6 @@ admin.site.register(Book, BookAdmin)
 
 class IssueAdmin(admin.ModelAdmin):
     list_display = (
-        'thumbnail_book',
         'is_on_time',
         'jpublish',
         'renewCount',

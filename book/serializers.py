@@ -28,7 +28,6 @@ class BookDetailSerializers(ModelSerializer):
             'slug',
             'category',
             # 'issue',
-            'thumbnail',
             'description',
             'author',
             'created',
@@ -47,6 +46,19 @@ class BookListSerializers(ModelSerializer):
             'name',
             'slug',
             'category',
-            'thumbnail',
             'status',
+        ]
+
+
+class BookInputSerializers(ModelSerializer):
+
+    class Meta:
+        model = Book
+        fields = [
+            'name',
+            'slug',
+            'category',
+            'description',
+            'author',
+            'created',
         ]

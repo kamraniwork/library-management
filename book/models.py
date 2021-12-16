@@ -35,7 +35,6 @@ class Book(models.Model):
     issue = models.ManyToManyField(User, through='Issue')
     description = models.TextField(verbose_name="توضیحات")
     author = models.CharField(max_length=200, verbose_name="نویسنده")
-    thumbnail = models.ImageField(upload_to='images', verbose_name="عکس")
     created = models.DateTimeField(auto_now_add=True, verbose_name='زمان انتشار')
     status = models.CharField(max_length=1, choices=Status_Choise, verbose_name="وضعیت")
 
@@ -51,8 +50,6 @@ class Book(models.Model):
     def jpublish(self):
         return jalaly_converter(self.created)
 
-    def thumbnail_tag(self):
-        return format_html("<img width=100 src='{}'>".format(self.thumbnail.url))
 
 
 class Issue(models.Model):
@@ -79,7 +76,4 @@ class Issue(models.Model):
 
     def jpublish(self):
         return jalaly_converter(self.created)
-
-    def thumbnail_book(self):
-        return self.book.thumbnail_tag()
 

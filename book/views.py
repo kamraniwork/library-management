@@ -3,7 +3,11 @@ from django.conf import settings
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Category, Book, Issue
-from .serializers import BookListSerializers, BookDetailSerializers
+from .serializers import (
+    BookListSerializers,
+    BookDetailSerializers,
+    BookInputSerializers,
+)
 from django.shortcuts import get_object_or_404
 
 
@@ -19,3 +23,11 @@ class BookView(ViewSet):
         book_obj = get_object_or_404(Book, status='p', slug=slug)
         serializer = BookDetailSerializers(instance=book_obj, context={'request': request})
         return Response(serializer.data)
+
+    def create(self, request):
+        serializer = BookInputSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save(status='p')
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
