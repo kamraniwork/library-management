@@ -51,7 +51,7 @@ admin.site.register(Book, BookAdmin)
 
 class IssueAdmin(admin.ModelAdmin):
     list_display = (
-        'is_on_time',
+        'is_not_time',
         'jpublish',
         'renewCount',
         'status',

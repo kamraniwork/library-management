@@ -31,7 +31,7 @@ class Book(models.Model):
 
     name = models.CharField(max_length=256)
     slug = models.SlugField(unique=True, max_length=256)
-    category = models.ManyToManyField(Category, verbose_name="دسته بندی")
+    category = models.ManyToManyField(Category, blank=True, verbose_name="دسته بندی")
     issue = models.ManyToManyField(User, through='Issue')
     description = models.TextField(verbose_name="توضیحات")
     author = models.CharField(max_length=200, verbose_name="نویسنده")
@@ -73,18 +73,18 @@ class Issue(models.Model):
 
         super(Issue, self).save(*args, **kwargs)
 
-    def is_on_time(self):
+    def is_not_time(self):
         last_two_week = timezone.now() - timedelta(days=14)
         if self.created > last_two_week:
-            self.delay = True
-            self.save()
-            return True
-        else:
             self.delay = False
             self.save()
             return False
+        else:
+            self.delay = True
+            self.save()
+            return True
 
-    is_on_time.boolean = True
+    is_not_time.boolean = True
 
     def jpublish(self):
         return jalaly_converter(self.created)
