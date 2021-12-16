@@ -1,5 +1,6 @@
 from rest_framework.serializers import (
     ModelSerializer,
+    HyperlinkedIdentityField
 )
 from .models import (
     Book,
@@ -36,11 +37,13 @@ class BookDetailSerializers(ModelSerializer):
 
 
 class BookListSerializers(ModelSerializer):
+    url = HyperlinkedIdentityField(view_name='book:book-detail', lookup_field='slug')
     category = CategoryListSerializers(many=True)
 
     class Meta:
         model = Book
         fields = [
+            'url',
             'name',
             'slug',
             'category',

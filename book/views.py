@@ -12,7 +12,7 @@ class BookView(ViewSet):
 
     def list(self, request):
         book_list = Book.objects.filter(status='p')
-        serializer = BookListSerializers(instance=book_list, many=True)
+        serializer = BookListSerializers(instance=book_list, context={'request': request}, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, slug=None):
