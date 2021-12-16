@@ -51,7 +51,6 @@ class BookListSerializers(ModelSerializer):
 
 
 class BookInputSerializers(ModelSerializer):
-
     class Meta:
         model = Book
         fields = [
@@ -61,4 +60,55 @@ class BookInputSerializers(ModelSerializer):
             'description',
             'author',
             'created',
+        ]
+
+
+class BookIssueListSerializers(ModelSerializer):
+    url = HyperlinkedIdentityField(view_name='book:book-detail', lookup_field='slug')
+
+    class Meta:
+        model = Book
+        fields = [
+            'url',
+            'name',
+            'slug',
+        ]
+
+
+class IssueListSerializers(ModelSerializer):
+    url = HyperlinkedIdentityField(view_name='book:issue-detail')
+    book = BookIssueListSerializers()
+
+    class Meta:
+        model = Issue
+        fields = [
+            'url',
+            'book',
+            'user',
+            'renewCount',
+        ]
+
+
+class IssueDetailSerializers(ModelSerializer):
+    book = BookDetailSerializers()
+
+    class Meta:
+        model = Issue
+        fields = [
+            'book',
+            'user',
+            'created',
+            'renewCount',
+            'status',
+        ]
+
+
+class IssueInputSerializers(ModelSerializer):
+
+    class Meta:
+        model = Issue
+        fields = [
+            'book',
+            'user',
+            'renewCount',
         ]

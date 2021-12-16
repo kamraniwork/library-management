@@ -51,13 +51,12 @@ class Book(models.Model):
         return jalaly_converter(self.created)
 
 
-
 class Issue(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='issue_book')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='issue_user')
     created = models.DateTimeField(auto_now_add=True, verbose_name='زمان انتشار')
     renewCount = models.IntegerField(verbose_name="تعداد تمدید")
-    status = models.BooleanField(default=True)
+    status = models.BooleanField(default=True,verbose_name='آیا هنوز در امانت است یا خیر؟ ')
 
     class Meta:
         ordering = ['-created']
@@ -76,4 +75,3 @@ class Issue(models.Model):
 
     def jpublish(self):
         return jalaly_converter(self.created)
-
