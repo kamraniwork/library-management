@@ -132,3 +132,34 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'user.User'
+
+CACHES = {
+    'default': {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": 'redis://127.0.0.1:6379/',
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', default='m.kamrani1421@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', default='13791381')
+EMAIL_TIMEOUT = 30
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+# cache
+EMAIL_SEND_COUNT = 'EMAIL_SEND_COUNT_'
+MAX_EMAIL_SEND_COUNT = 3
+MAX_EMAIL_SEND_TIMEOUT = 60 * 60
+
+STORE_TOKEN = 'CACHE_STORE_TOKEN_'
+MAX_CONFIRM_REGISTER = 60 * 5
+MAX_STORE_TOKEN_TIME_OUT = 60 * 60 * 12
+
+MAX_CONFIRM_FORGOT_PASSWORD = 60 * 5
+
+KAVENEGAR_KEY = os.getenv('kavenegar_key', '12345')

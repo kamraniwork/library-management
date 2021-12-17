@@ -12,20 +12,20 @@ class RegisterEmailSerializer(serializers.ModelSerializer):
     """
     Register user with email,password
     """
-    username = serializers.CharField(min_length=8, max_length=30)
+    username = serializers.CharField(max_length=30)
     email = serializers.EmailField(max_length=50, min_length=5)
     password = serializers.CharField(min_length=8, max_length=30, validators=[PASSWORD_REGEX])
 
     class Meta:
         model = get_user_model()
-        fields = ('username', 'email', 'phone', 'password')
+        fields = ('username', 'email', 'password')
 
 
 class RegisterPhoneSerializer(serializers.ModelSerializer):
     """
     Register user with phone,password
     """
-    username = serializers.CharField(min_length=8, max_length=30)
+    username = serializers.CharField(max_length=30)
     phone = serializers.CharField(validators=[PHONE_NUMBER_REGEX])
     password = serializers.CharField(min_length=8, max_length=30, validators=[PASSWORD_REGEX])
 
@@ -46,18 +46,11 @@ class LoginSerializer(serializers.ModelSerializer):
         fields = ('username', 'password')
 
 
-class ForgotPasswordEmailSerializer(serializers.Serializer):
+class ForgotPasswordSerializer(serializers.Serializer):
     """
     user can enter email and send token to your email
     """
-    email = serializers.EmailField()
-
-
-class ForgotPasswordPhoneSerializer(serializers.Serializer):
-    """
-    user can enter phone and send token to your phone number
-    """
-    phone = serializers.CharField()
+    username = serializers.CharField()
 
 
 class ChangePasswordWithForgotTokenSerializer(serializers.Serializer):

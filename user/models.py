@@ -11,8 +11,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     Custom user model for better management authenticated
     """
     username = models.CharField(max_length=100, unique=True)
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=11, unique=True)
+    email = models.EmailField()
+    phone = models.CharField(max_length=11)
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
     is_staff = models.BooleanField(default=False)

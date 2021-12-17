@@ -16,13 +16,13 @@ def send_email_confirm(email, token, address, inf):
         body = f"""
         با سلام،
         به منظور تایید ایمیل خود بر روی لینک زیر کلیک نمایید.
-        http://localhost:8000/api/auth/{address}/{token}/
+        http://localhost:8000/user/{address}/{token}/
         """
     else:
         body = f"""
                 با سلام،
                 به منظور تایید ایمیل خود بر روی لینک زیر کلیک نمایید.
-                http://localhost:8000/api/auth/{address}/{token}/{inf}/
+                http://localhost:8000/user/{address}/{token}/{inf}/
                 """
     message = EmailMessage(
         subject='لینک فعال سازی اکانت', body=body, to=[email]
@@ -42,13 +42,13 @@ def send_sms_confirm(phone, token, address, inf):
         massage = f"""
             با سلام،
             به منظور تایید شماره تلفن خود بر روی لینک زیر کلیک نمایید.
-            http://localhost:8000/api/auth/{address}/{token}/
+            http://localhost:8000/user/{address}/{token}/
             """
     else:
         massage = f"""
                     با سلام،
                     به منظور تایید شماره تلفن خود بر روی لینک زیر کلیک نمایید.
-                    http://localhost:8000/api/auth/{address}/{token}/{inf}/
+                    http://localhost:8000/user/{address}/{token}/{inf}/
                     """
     send_sms(phone, massage)
 
@@ -58,7 +58,7 @@ def send_password_forget_token_email(email, token):
     body = f"""
             با سلام،
             به منظور تایید هویت خودتان جهت تغییر فراموشی رمز عبود، روی لینک زیر کلیک کنید
-            http://localhost:8000/api/auth/forget_password/forgot/{token}/
+            http://localhost:8000/user/forget_password/forgot/{token}/
             """
     message = EmailMessage(
         subject=subject, body=body, to=[email]

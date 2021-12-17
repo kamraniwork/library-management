@@ -28,8 +28,7 @@ from .serializers import (
     RegisterEmailSerializer,
     RegisterPhoneSerializer,
     LoginSerializer,
-    ForgotPasswordEmailSerializer,
-    ForgotPasswordPhoneSerializer,
+    ForgotPasswordSerializer,
     ChangePasswordWithForgotTokenSerializer,
     ChangePasswordSerializer,
     ProfileSerializer,
@@ -63,7 +62,7 @@ class RegisterUser(ViewSet):
             email = serializer.data['email'].lower()
             password = serializer.data['password']
             try:
-                user = User.objects.filter(username=username).first()
+                user = User.objects.get(username=username)
                 if user and user.is_active:
                     return Response({'access denied': 'this email register before'}, status=403)
             except Exception:
@@ -100,7 +99,7 @@ class RegisterUser(ViewSet):
             password = serializer.data['password']
 
             try:
-                user = User.objects.filter(username=username).first()
+                user = User.objects.get(username=username)
                 if user and user.is_active:
                     return Response({'access denied': 'this email register before'}, status=403)
 
@@ -165,7 +164,7 @@ class LoginView(ViewSet):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             username = serializer.data['username']
-            user = User.objects.filter(username=username)
+            user = User.objects.filter(username=username).first()
             if user is not None:
                 if user.check_password(serializer.data['password']) and user.is_active:
                     token = RefreshToken.for_user(user=user)
@@ -195,14 +194,14 @@ class ForgotPassword(ViewSet):
         """
         user send email address for send generate token to email
         """
-        serialize_data = ForgotPasswordEmailSerializer(data=request.data)
+        serialize_data = ForgotPasswordSerializer(data=request.data)
         if serialize_data.is_valid():
-            email = serialize_data.data['email']
-            user = User.objects.filter(email=email).first()
-            if user is not None:
+            username = serialize_data.data['username']
+            user = User.objects.filter(username=username).first()
+            if user is None:
                 pass
 
-            if user.is_active:
+            if user.is_active or user.email is not None:
                 # per user can not this request more than 3 time in hours. extension/utils.py
                 check_send_email_or_phone_permission(username=user.username)
                 token = RefreshToken.for_user(user=user)
@@ -210,7 +209,7 @@ class ForgotPassword(ViewSet):
                 token_jwt = {'username': user.username, 'refresh': str(token), 'access': str(access_token)}
                 store_token_cache(token=token_jwt, username=user.username,
                                   time=settings.MAX_CONFIRM_FORGOT_PASSWORD)
-                send_password_forget_token_email(email=email, token=str(access_token))
+                send_password_forget_token_email(email=user.email, token=str(access_token))
                 return Response({"success": "check email box"}, status=201)
             else:
                 return Response({'error': 'This account is inactive.'}, status=403)
@@ -218,18 +217,18 @@ class ForgotPassword(ViewSet):
             return Response({"errors": serialize_data.errors}, status=400)
 
     @action(detail=False, methods=['post'])
-    def forgot_password_with_phone(self, request):
+    def forgot_password_phone(self, request):
         """
         user send phone number for send generate token with sms
         """
-        serialize_data = ForgotPasswordPhoneSerializer(data=request.data)
+        serialize_data = ForgotPasswordSerializer(data=request.data)
         if serialize_data.is_valid(raise_exception=True):
-            phone = serialize_data.data['phone']
-            user = User.objects.filter(phone=phone).first()
+            username = serialize_data.data['username']
+            user = User.objects.filter(username=username).first()
             if user is None:
                 return Response({'error': 'Phone number is invalid'}, status=400)
 
-            if user.is_active:
+            if user.is_active or user.phone is not None:
                 # per user can not this request more than 3 time in hours. extension/utils.py
                 check_send_email_or_phone_permission(username=user.username)
                 token = RefreshToken.for_user(user=user)
