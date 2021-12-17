@@ -7,7 +7,7 @@ from .models import Profile
 
 class UserAdmin(BaseUserAdmin):
     readonly_fields = ['created_at', 'updated_at']
-    list_display = ('id', 'email', 'mobile', 'first_name', 'last_name', 'is_superuser', 'is_active')
+    list_display = ('id', 'email', 'phone', 'first_name', 'last_name', 'is_superuser', 'is_active')
     list_filter = ('is_superuser', 'is_active')
     fieldsets = (
         ('Security information', {'fields': ('username', 'password')}),

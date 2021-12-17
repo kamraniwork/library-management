@@ -12,3 +12,13 @@ def register_user_with_email_or_phone_and_password(username=None, email=None, ph
 def change_user_password(user, password):
     user.set_password(password)
     user.save()
+
+
+@transaction.atomic
+def set_email(user, email):
+    user.email = email
+
+
+@transaction.atomic
+def set_phone(user, phone):
+    user.phone = phone

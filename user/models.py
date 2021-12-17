@@ -12,7 +12,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
-    mobile = models.CharField(max_length=11, unique=True)
+    phone = models.CharField(max_length=11, unique=True)
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
     is_staff = models.BooleanField(default=False)
@@ -24,7 +24,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'mobile']
 
     def __str__(self):
         return self.username
