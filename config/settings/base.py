@@ -44,6 +44,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'book.apps.BookConfig',
+    'user.apps.UserConfig',
 ]
 
 INSTALLED_APPS = DEFAULT_APP + THIRD_PARTY_APPS + LOCAL_APPS
@@ -129,3 +130,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+AUTH_USER_MODEL = 'user.User'
