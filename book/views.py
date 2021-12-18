@@ -1,7 +1,6 @@
-from rest_framework.viewsets import ViewSet, ModelViewSet
+from rest_framework.viewsets import ViewSet
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
-from django.conf import settings
-from django.utils import timezone
+from django.db.models import Q
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Category, Book, Issue
@@ -79,12 +78,12 @@ class IssueView(ViewSet):
         return [permission() for permission in permission_classes]
 
     def list(self, request):
-        issue_book = Issue.objects.filter(status=True)
+        issue_book = Issue.objects.filter(~Q(status='k'))
         serializer = IssueListSerializers(instance=issue_book, context={'request': request}, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        issue_obj = get_object_or_404(Issue, status=True, pk=pk)
+        issue_obj = get_object_or_404(Issue, ~Q(status='k'), pk=pk)
         serializer = IssueDetailSerializers(instance=issue_obj, context={'request': request})
         return Response(serializer.data)
 
@@ -112,28 +111,35 @@ class IssueView(ViewSet):
 
     @action(detail=False, methods=['get'], permission_classes=(IsAuthenticated,), name='self user issue list')
     def user_issue_list_book(self, request):
-        issue_book_user = Issue.objects.filter(user=request.user, status=True)
+        issue_book_user = Issue.objects.filter(~Q(status='k'), user=request.user)
         serializer = IssueListSerializers(instance=issue_book_user, context={'request': request}, many=True)
         return Response(serializer.data)
 
-    @action(detail=True, methods=['post'], permission_classes=(IsAuthenticated,), name='renew book')
-    def user_issue_renew(self, request, pk):
-        issue_book = get_object_or_404(Issue, user=request.user, pk=pk, status=True)
-        if issue_book.renewCount < 3:
-            issue_book.created = timezone.now()
-            issue_book.status = True
-            issue_book.renewCount += 1
-            issue_book.save()
-            serializer = IssueDetailSerializers(instance=issue_book, context={'request': request})
-            return Response(serializer.data)
-        else:
-            return Response({'status': 'you can not renew book more than 3 time. please return book to library...'},
-                            status=400)
+    @action(detail=True, methods=['get'], permission_classes=(IsAuthenticated,), name='renew book request')
+    def user_issue_renew_request(self, request, pk):
+        issue_book = get_object_or_404(Issue, ~Q(status='k'), user=request.user, pk=pk)
+        issue_book.status = 'o'
+        issue_book.save()
+        return Response({'status': 'please waite for accept request...'})
+
+    @action(detail=True, methods=['get'], permission_classes=(IsAdminUser,), name='renew book')
+    def user_issue_accept_renew(self, request, pk):
+        issue_book = get_object_or_404(Issue, status='o', pk=pk)
+        issue_book.status = 'p'
+        issue_book.save()
+        return Response({'status': 'you accept issue user '})
+
+    @action(detail=True, methods=['get'], permission_classes=(IsAdminUser,), name='reject renew book')
+    def user_issue_reject_renew(self, request, pk):
+        issue_book = get_object_or_404(Issue, status='o', pk=pk)
+        issue_book.status = 'd'
+        issue_book.save()
+        return Response({'status': 'you reject issue user '})
 
     @action(detail=True, methods=['post'], permission_classes=(IsAuthenticated,), name='return book')
     def user_issue_return(self, request, pk):
-        issue_book = get_object_or_404(Issue, user=request.user, pk=pk, status=True)
-        issue_book.status = False
+        issue_book = get_object_or_404(Issue, ~Q(status='k'), user=request.user, pk=pk)
+        issue_book.status = 'k'
         issue_book.book.status = 'p'
         issue_book.book.save()
         issue_book.save()
@@ -141,6 +147,6 @@ class IssueView(ViewSet):
 
     @action(detail=False, methods=['get'], permission_classes=(IsAdminUser,), name='list is_on_time==True user ')
     def user_issue_delay_list_return(self, request):
-        issue_delay_user = Issue.objects.filter(user=request.user, delay=True, status=True)
+        issue_delay_user = Issue.objects.filter(~Q(status='k'), user=request.user, delay=True)
         serializer = IssueListSerializers(instance=issue_delay_user, context={'request': request}, many=True)
         return Response(serializer.data)

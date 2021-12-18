@@ -11,7 +11,7 @@ class UserAdmin(BaseUserAdmin):
     list_filter = ('is_superuser', 'is_active')
     fieldsets = (
         ('Security information', {'fields': ('username', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'email', 'phone')}),
         ('Permissions', {'fields': ('is_superuser', 'is_active')}),
         ('Important date', {'fields': ('created_at', 'updated_at')}),
     )

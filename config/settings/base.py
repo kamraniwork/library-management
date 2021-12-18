@@ -163,3 +163,8 @@ MAX_STORE_TOKEN_TIME_OUT = 60 * 60 * 12
 MAX_CONFIRM_FORGOT_PASSWORD = 60 * 5
 
 KAVENEGAR_KEY = os.getenv('kavenegar_key', '12345')
+
+# celery
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_TASK_SERIALIZER = 'json'

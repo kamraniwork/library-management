@@ -52,12 +52,20 @@ class Book(models.Model):
 
 
 class Issue(models.Model):
+    Status_Choise = (
+        ('d', 'مخالفت با تمدید'),
+        ('p', 'امانت عادی'),
+        ('q', 'گذشت زمان مجاز'),
+        ('o', 'درخواست تمدید کاربر'),
+        ('k', 'تحویل کتاب'),
+    )
+
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='issue_book')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='issue_user')
     created = models.DateTimeField(auto_now_add=True, verbose_name='زمان انتشار')
     renewCount = models.IntegerField(verbose_name="تعداد تمدید")
     delay = models.BooleanField(default=False, verbose_name='تاخیر')
-    status = models.BooleanField(default=True, verbose_name='آیا هنوز در امانت است یا خیر؟ ')
+    status = models.CharField(max_length=1, choices=Status_Choise, verbose_name="وضعیت")
 
     class Meta:
         ordering = ['-created']
@@ -66,11 +74,12 @@ class Issue(models.Model):
         return self.book.name
 
     def save(self, *args, **kwargs):
-        if not self.status:
+        if self.status == 'k':
             self.book.status = 'p'
         else:
             self.book.status = 'd'
 
+        self.book.save()
         super(Issue, self).save(*args, **kwargs)
 
     def is_not_time(self):

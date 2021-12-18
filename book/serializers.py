@@ -144,6 +144,7 @@ class IssueInputSerializers(serializers.Serializer):
     user = serializers.CharField(max_length=256, required=True)
     book = serializers.CharField(max_length=256, required=True)
     renewCount = serializers.IntegerField(required=False)
+    status = serializers.CharField(max_length=1, required=False)
 
     def create(self, validated_data):
         username = validated_data.get('user')
@@ -152,14 +153,16 @@ class IssueInputSerializers(serializers.Serializer):
         user = get_object_or_404(User, username=username)
         book = get_object_or_404(Book, slug=book_id, status='p')
         if user is not None or book is not None:
-            issue = Issue.objects.create(user=user, book=book, renewCount=0, status=True)
+            issue = Issue.objects.create(user=user, book=book, renewCount=0, status='p')
         else:
             return Response('user or book not Available')
         return issue
 
     def update(self, instance, validated_data):
         renew_count = validated_data.get('renewCount', instance.renewCount)
+        status = validated_data.get('status', 'p')
 
         instance.renewCount = renew_count
+        instance.status = status
         instance.save()
         return instance
