@@ -12,6 +12,11 @@
     *   [create](#create-issue)
     *   [update](#update-issue)
     *   [delete](#delete-issue)
+    *   [list issue custom user](#list-issue-custom-user)
+    *   [Request for renew issue book](#request-for-renew-issue-book)
+    *   [Accept request for renew issue book](#accept-request-for-renew-issue-book)
+    *   [Reject request for renew issue book](#reject-request-for-renew-issue-book)
+    *   [Return issue book](#return-issue-book)
 ## Book
 ### list book
 * ###### Description: 
