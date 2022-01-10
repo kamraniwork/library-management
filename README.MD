@@ -68,11 +68,11 @@
     
 * ###### Request: `post`  `http://localhost:8000/book/book/`
 * ###### Param:
-    *   `name`: required | string
-    *   `slug`: required | string
-    *   `category`: not required | list
-    *   `description`: not required | string
-    *   `author`: required | string
+    *   `name`: required | ![](https://img.shields.io/static/v1?label=&message=string&color=green)
+    *   `slug`: required | ![](https://img.shields.io/static/v1?label=&message=string&color=green)
+    *   `category`: not required | ![](https://img.shields.io/static/v1?label=&message=list&color=blue)
+    *   `description`: not required | ![](https://img.shields.io/static/v1?label=&message=string&color=green)
+    *   `author`: required | ![](https://img.shields.io/static/v1?label=&message=string&color=green)
     
 * ###### example:
     ```json
