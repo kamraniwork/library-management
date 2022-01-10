@@ -9,9 +9,9 @@
 1. [Issue](#Issue)
     *   [list](#list-issue)
     *   [detail](#detail-issue)
-    *   [create](#detail-book)
-    *   [update](#update-book)
-    *   [delete](#delete-book)
+    *   [create](#create-issue)
+    *   [update](#update-issue)
+    *   [delete](#delete-issue)
 ## Book
 ### list book
 * ###### Description: 
@@ -237,3 +237,75 @@
     
 * ###### Request: `delete`  `http://localhost:8000/book/issue/{pk}`
 * ###### Param: `None`
+
+### list issue custom user
+* ###### Description: 
+    return all issue book for authenticated user. issue books that `status=d,p,q,d`
+    
+* ###### Request: `GET`  `http://localhost:8000/book/issue/user_issue_list_book/`
+* ###### Param: `None`
+* ###### Response:
+    ```json
+      [
+        {
+          "url": "http://localhost:8000/book/issue/2/",
+          "book": {
+                "url": "http://localhost:8000/book/book/two-scoops-of-django/",
+                "name": "two scoops of django 3.x",
+                "slug": "two-scoops-of-django"
+          },
+          "user": 1,
+          "renewCount": 1,
+          "is_not_time": false
+        }
+      ]   
+    ```
+### Request for renew issue book
+* ###### Description: 
+    user can renew book and if accept by superuser `RenewCount +=1`
+    
+    superuser can go to `http://localhost:8000/book/issue/{pk}/user_issue_accept_renew` accept request or `http://localhost:8000/book/issue/{pk}/user_issue_reject_renew` reject it
+* ###### Request: `GET`  `http://localhost:8000/book/issue/{pk}/user_issue_renew_request/`
+* ###### Param: `None`
+* ###### Response:
+    ```json
+      {
+        "status": "please waite for accept request..."
+      }   
+    ```
+### Accept request for renew issue book
+* ###### Description: 
+    user can renew book and if accept by superuser `RenewCount +=1`
+    
+* ###### Request: `GET`  `http://localhost:8000/book/issue/{pk}/user_issue_accept_renew`
+* ###### Param: `None`
+* ###### Response:
+    ```json
+      {
+        "status": "you accept issue user "
+      }   
+    ```
+### Reject request for renew issue book
+* ###### Description: 
+    user can renew book and if accept by superuser `RenewCount +=1` else `status=d`
+    
+* ###### Request: `GET`  `http://localhost:8000/book/issue/{pk}/user_issue_reject_renew`
+* ###### Param: `None`
+* ###### Response:
+    ```json
+      {
+        "status": "you reject issue user "
+      }   
+    ```
+### Return issue book 
+* ###### Description: 
+    return issue book by user and `status=k`
+    
+* ###### Request: `POST`  `http://localhost:8000/book/issue/{pk}/user_issue_return`
+* ###### Param: `None`
+* ###### Response:
+    ```json
+      {
+        "status": "book return to library "
+      }   
+    ```
