@@ -7,10 +7,10 @@ class UserManager(BaseUserManager):
     """
 
     def create_user(self, username=None, email=None, phone=None, password=None, **extra_fields):
-        if email is None or phone is None:
+        if email is None and phone is None:
             user = self.model(username=username, **extra_fields)
         else:
-            user = self.model(username=username, email=email, phone=phone ** extra_fields)
+            user = self.model(username=username, email=email, phone=phone, **extra_fields)
 
         user.set_password(password)
         user.save()

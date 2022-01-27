@@ -18,10 +18,16 @@ class BaseTest(APITestCase):
         self.user = User.objects.create_user(username='ali', email='ali@gmail.com', password='Ali123456')
         self.user.is_active = True
 
+        self.user_info = {
+            "username": "test2",
+            "email": "test2@gmail.com",
+            "password": "Test1234"
+        }
+
     def login_jwt(self, username, password):
         login_data = {
             "username": username,
             "password": password
         }
-        token = self.client.post(reverse("auth:login-login-user"), login_data, format='json')
+        token = self.client.post(reverse("auth:login-login-user"), data=login_data, format='json')
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + token.data['access'])
