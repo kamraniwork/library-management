@@ -34,7 +34,7 @@ def store_token_cache(token, username, time):
     store access_token and refresh_token in redis
     :param token: jwt_token
     :param username: email or phone number
-    :param time: in base.py ==> MAX_STORE_TOKEN_TIME_OUT= 1 day , MAX_CONFIRM_FORGOT_PASSWORD = 5 minutes,
+    :param time: in base_test.py ==> MAX_STORE_TOKEN_TIME_OUT= 1 day , MAX_CONFIRM_FORGOT_PASSWORD = 5 minutes,
     MAX_CONFIRM_REGISTER = 5 minutes
     """
     jwt_token = cache.get('{}{}'.format(settings.STORE_TOKEN, username), None)
