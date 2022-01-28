@@ -72,3 +72,26 @@ class Account(BaseTest):
 
         self.assertEqual(User.objects.all().count(), 2)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_confirm_register_error(self):
+        """ Test dont confirm user when token is invalid """
+
+        self.client.post(reverse("auth:register-register-email"), data=self.user_info_email)
+        response = self.client.get(reverse("auth:confirm-confirm-register", args=[
+            'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQzMzkyODk4LCJpYXQiOjE2NDMzOTI1OTgsImp0aSI6IjQ5NDg1MjEwNGQ1MzRmNzM4YmI2Njg5MzA2kjxyODdhIiwidXNlcl9pZCI6OX0.su7em94PLTg3Kj-NQBtcPguaaihxoinkfxrWejclwg8o']))
+
+        user = User.objects.get(username=self.user_info_email['username'])
+
+        self.assertFalse(user.is_active)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_confirm_user(self):
+        """ Test dont confirm user if everything is correct """
+
+        self.client.post(reverse("auth:register-register-email"), data=self.user_info_email)
+        response = self.client.get(reverse("auth:confirm-confirm-register", args=[
+            cache.get(f"CACHE_STORE_TOKEN_{self.user_info_email['username']}")['access']]))
+
+        user = User.objects.get(username=self.user_info_email['username'])
+        self.assertTrue(user.is_active)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -140,13 +140,14 @@ class ConfirmView(ViewSet):
         confirm register and user.is_active = True
         """
         token = kwargs.get('token')
-        payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
-        user = User.objects.get(id=payload['user_id'])
-        if not user.is_active and token == validate_token(username=user.username):
-            user.is_active = True
-            user.save()
-            return Response({'success': 'your account is confirm'}, status=200)
-        else:
+        try:
+            payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
+            user = User.objects.get(id=payload['user_id'])
+            if not user.is_active and token == validate_token(username=user.username):
+                user.is_active = True
+                user.save()
+                return Response({'success': 'your account is confirm'}, status=200)
+        except Exception as e:
             return Response({'error': 'token is expire time'}, status=403)
 
 
