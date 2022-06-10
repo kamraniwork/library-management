@@ -6,6 +6,7 @@
     *   [create](#detail-book)
     *   [update](#update-book)
     *   [delete](#delete-book)
+    *   [sitemap](#site-map)
 1. [Issue](#Issue)
     *   [list](#list-issue)
     *   [detail](#detail-issue)
@@ -136,6 +137,12 @@
     
 * ###### Request: `delete`  `http://localhost:8000/book/book/{slug}`
 * ###### Param: `None`
+
+## site map
+* ###### Description:
+    use in SEO for crawler google bot find important page in site
+* ###### Screen Shots
+    ![ScreenShot](pic/lib.png)
 
 ## Issue
 ### list issue
