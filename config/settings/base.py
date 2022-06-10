@@ -36,6 +36,9 @@ DEFAULT_APP = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
 ]
 
 THIRD_PARTY_APPS = [
@@ -48,6 +51,8 @@ LOCAL_APPS = [
 ]
 
 INSTALLED_APPS = DEFAULT_APP + THIRD_PARTY_APPS + LOCAL_APPS
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

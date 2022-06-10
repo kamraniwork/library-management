@@ -18,10 +18,20 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
+from extension.sitemaps import BookSitemap
+from django.contrib.sitemaps.views import sitemap
+
+sitemaps = {
+    'book': BookSitemap
+}
+
+app_name = "main"
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('book/', include('book.urls')),
     path('user/', include('user.urls')),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+
 ]
 
 if settings.DEBUG:
